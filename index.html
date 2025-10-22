@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Mercy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Updated background animation to be more subtle and Apple-like */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(80, 80, 100, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(60, 60, 80, 0.1) 0%, transparent 50%);
+            animation: pulse 10s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            padding: 2rem 0 4rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            /* Made blood-red more readable with brighter crimson gradient and stronger glow */
+            background: linear-gradient(180deg, #DC143C 0%, #8B0000 50%, #5C0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 60px rgba(220, 20, 60, 0.9), 0 0 30px rgba(220, 20, 60, 0.7);
+            filter: drop-shadow(0 4px 12px rgba(220, 20, 60, 1)) drop-shadow(0 0 20px rgba(139, 0, 0, 0.8));
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: #888;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        /* Enhanced glass card with Apple-inspired liquid glass effect */
+        .glass-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 450px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6),
+                        0 0 80px rgba(100, 100, 120, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-image {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            filter: grayscale(30%) contrast(1.2);
+        }
+
+        .glass-card:hover .card-image img {
+            transform: scale(1.1);
+            filter: grayscale(0%) contrast(1.3);
+        }
+
+        .card-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: relative;
+            padding: 2rem;
+            z-index: 2;
+        }
+
+        .card-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: #aaaaaa;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(139, 0, 0, 0.2);
+            border: 1px solid rgba(139, 0, 0, 0.4);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #ff4444;
+            font-weight: 600;
+        }
+
+        /* Enhanced liquid effect with smoother Apple-like animation */
+        .liquid-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(120, 120, 160, 0.3) 0%, rgba(80, 80, 120, 0.15) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+            filter: blur(40px);
+        }
+
+        .glass-card:hover .liquid-effect {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            header {
+                padding: 1rem 0 2rem;
+            }
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 0 0 80px rgba(139, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.6);
+            }
+            20% {
+                text-shadow: 3px 3px 0 rgba(75, 0, 0, 0.9), -3px -3px 0 rgba(139, 0, 0, 0.5);
+            }
+            40% {
+                text-shadow: 0 0 80px rgba(139, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.6);
+            }
+            60% {
+                text-shadow: -3px -3px 0 rgba(75, 0, 0, 0.9), 3px 3px 0 rgba(139, 0, 0, 0.5);
+            }
+            80% {
+                text-shadow: 0 0 80px rgba(139, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.6);
+            }
+            100% {
+                text-shadow: 0 0 80px rgba(139, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.6);
+            }
+        }
+
+        h1:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        /* Minimal badass footer styling */
+        footer {
+            padding: 4rem 0 2rem;
+            text-align: center;
+            position: relative;
+            margin-top: 4rem;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(139, 0, 0, 0.3) 50%, transparent 100%);
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: #555;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .footer-text:hover {
+            color: #8B0000;
+            text-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+        }
+
+        .footer-link {
+            color: #888;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .footer-link:hover {
+            color: #8B0000;
+            border-bottom-color: rgba(139, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <header>
+            <h1>NO MERCY</h1>
+            <p class="tagline">"No Mercy" to weaknesses</p>
+        </header>
+
+        <div class="cards-grid" id="cardsContainer">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+
+        <footer>
+            <p class="footer-text">
+                Forged in Blood 🩸 by <a href="https://ogpourya.ir" class="footer-link" target="_blank" rel="noopener">ogpourya.ir</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const cardsDatabase = [
+            {
+                title: "PREDATOR",
+                description: "Hunt or be hunted. The apex doesn't ask for permission. It takes what's earned through blood and dominance.",
+                tag: "Ruthless",
+                imageId: 1
+            },
+            {
+                title: "CHAOS",
+                description: "Embrace the storm. Power isn't found in calm waters but in the fury of untamed elements that bow to no one.",
+                tag: "Unstoppable",
+                imageId: 2
+            },
+            {
+                title: "INFERNO",
+                description: "Burn everything that stands in your way. Rise from the ashes stronger, fiercer, and more dangerous than before.",
+                tag: "Relentless",
+                imageId: 3
+            },
+            {
+                title: "WARRIOR",
+                description: "Forged in battle. Tempered by pain. Victory isn't given—it's seized by those who refuse to fall.",
+                tag: "Fearless",
+                imageId: 4
+            },
+            {
+                title: "SUMMIT",
+                description: "Climb higher than anyone dares. The peak belongs to those who conquer fear and embrace the impossible.",
+                tag: "Dominant",
+                imageId: 5
+            },
+            {
+                title: "LEGEND",
+                description: "Myths are born from those who refuse to be ordinary. Become the story that others fear to tell.",
+                tag: "Immortal",
+                imageId: 6
+            }
+        ];
+
+        function generateCards() {
+            const container = document.getElementById('cardsContainer');
+            
+            cardsDatabase.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'glass-card';
+                cardElement.setAttribute('data-tilt', '');
+                
+                cardElement.innerHTML = `
+                    <div class="liquid-effect"></div>
+                    <div class="card-image">
+                        <img src="https://picsum.photos/600/400?random=${card.imageId}" alt="${card.title}">
+                    </div>
+                    <div class="card-content">
+                        <h2 class="card-title">${card.title}</h2>
+                        <p class="card-description">${card.description}</p>
+                        <span class="card-tag">${card.tag}</span>
+                    </div>
+                `;
+                
+                container.appendChild(cardElement);
+            });
+            
+            // Initialize effects after cards are created
+            initializeCardEffects();
+        }
+
+        function initializeCardEffects() {
+            const cards = document.querySelectorAll('.glass-card');
+            
+            cards.forEach(card => {
+                const liquidEffect = card.querySelector('.liquid-effect');
+                
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    liquidEffect.style.left = `${x - 150}px`;
+                    liquidEffect.style.top = `${y - 150}px`;
+                });
+
+                // 3D tilt effect
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // Generate cards on page load
+        generateCards();
+
+        // Parallax scroll effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-animation');
+            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+</body>
+</html>
