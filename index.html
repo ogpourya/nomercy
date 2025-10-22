@@ -315,41 +315,11 @@
     <script>
         const cardsDatabase = [
             {
-                title: "PREDATOR",
-                description: "Hunt or be hunted. The apex doesn't ask for permission. It takes what's earned through blood and dominance.",
-                tag: "Ruthless",
-                imageId: 1
+                title: "FIGHTER",
+                description: "“The only bad workout is the one you didn’t do.”",
+                tag: "Workout",
+                imageUrl: "https://s6.uupload.ir/files/workout_hzcr.jpg"
             },
-            {
-                title: "CHAOS",
-                description: "Embrace the storm. Power isn't found in calm waters but in the fury of untamed elements that bow to no one.",
-                tag: "Unstoppable",
-                imageId: 2
-            },
-            {
-                title: "INFERNO",
-                description: "Burn everything that stands in your way. Rise from the ashes stronger, fiercer, and more dangerous than before.",
-                tag: "Relentless",
-                imageId: 3
-            },
-            {
-                title: "WARRIOR",
-                description: "Forged in battle. Tempered by pain. Victory isn't given—it's seized by those who refuse to fall.",
-                tag: "Fearless",
-                imageId: 4
-            },
-            {
-                title: "SUMMIT",
-                description: "Climb higher than anyone dares. The peak belongs to those who conquer fear and embrace the impossible.",
-                tag: "Dominant",
-                imageId: 5
-            },
-            {
-                title: "LEGEND",
-                description: "Myths are born from those who refuse to be ordinary. Become the story that others fear to tell.",
-                tag: "Immortal",
-                imageId: 6
-            }
         ];
 
         function generateCards() {
@@ -363,7 +333,7 @@
                 cardElement.innerHTML = `
                     <div class="liquid-effect"></div>
                     <div class="card-image">
-                        <img src="https://picsum.photos/600/400?random=${card.imageId}" alt="${card.title}">
+                        <img src="${card.imageUrl}" alt="${card.title}">
                     </div>
                     <div class="card-content">
                         <h2 class="card-title">${card.title}</h2>
